@@ -45,7 +45,7 @@ io.on("connection", socket => {
     // Frame counter to skip frames.
     let frameCounter = 0;
     // How many frames to skip (e.g. process only every 2nd frame)
-    const skipCount = 2;
+    const skipCount = 4;
 
     // Listen for incoming inference_frame events.
     socket.on("inference_frame", data => {
@@ -82,7 +82,7 @@ io.on("connection", socket => {
         } else {
             console.log(`Socket ${socket.id}: No frames in batch.`);
         }
-    }, 500); // 500 ms interval
+    }, 1000); // 500 ms interval
 
     socket.on("join-room", roomID => {
         socket.join(roomID);
