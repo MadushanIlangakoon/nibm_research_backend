@@ -82,7 +82,7 @@ io.on("connection", socket => {
         } else {
             console.log(`Socket ${socket.id}: No frames in batch.`);
         }
-    }, 1000); // 500 ms interval
+    }, 500); // 500 ms interval
 
     socket.on("join-room", roomID => {
         socket.join(roomID);
