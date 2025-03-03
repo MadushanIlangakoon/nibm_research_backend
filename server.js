@@ -16,7 +16,10 @@ const generalAnswersRoutes = require('./routes/generalAnswersRoutes');
 const testAnswersRoutes = require('./routes/testAnswersRoutes');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://nibm-research-frontend.onrender.com"
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
