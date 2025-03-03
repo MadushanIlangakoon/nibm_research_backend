@@ -32,7 +32,7 @@ app.use('/api/test_answers', testAnswersRoutes);
 const server = http.createServer(app);
 const io = socketIO(server, {
     cors: {
-        origin: "http://localhost:3000", // Allow your frontend origin
+        origin: "https://nibm-research-frontend.onrender.com", // Allow your frontend origin
         methods: ["GET", "POST"],
     }
 });
@@ -67,7 +67,7 @@ io.on("connection", socket => {
         if (frameBatch.length > 0) {
             console.log(`Socket ${socket.id}: Sending batch of ${frameBatch.length} frames for inference.`);
             try {
-                const response = await axios.post("http://localhost:5001/inference/infer_frame", {
+                const response = await axios.post("https://nibm-research-ml.onrender.com/inference/infer_frame", {
                     images: frameBatch
                 });
                 console.log(`Socket ${socket.id}: Received batch response from Flask:`, response.data);
