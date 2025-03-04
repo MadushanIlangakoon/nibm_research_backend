@@ -5,7 +5,7 @@ async function createLecture({ course_id, teacher_id, title, description, schedu
     // Generate a meeting room name using a timestamp
     const roomName = `meeting-${Date.now()}`;
     // Construct a meeting URL pointing to our custom meeting page (adjust the domain/port as needed)
-    const video_call_url = `https://nibm-research-frontend.onrender.com/meeting/${roomName}`;
+    const video_call_url = `http://localhost:3000/meeting/${roomName}`;
 
     const payload = {
         course_id,
@@ -104,6 +104,19 @@ async function getLectureById(id) {
     return data;
 }
 
+async function getPastLectures(course_id) {
+    const { data, error } = await supabase
+        .from('lectures')
+        .select('*')
+        .eq('course_id', course_id)
+        .not('ended_at', 'is', null);
+    if (error) {
+        console.error("Supabase error in getPastLectures:", error);
+        throw new Error(error.message);
+    }
+    return data;
+}
+
 module.exports = {
     createLecture,
     getOngoingLectures,
@@ -111,4 +124,5 @@ module.exports = {
     updateLectureStart,
     getLectureById,
     endLecture,
+    getPastLectures,
 };

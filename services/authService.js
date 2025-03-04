@@ -1,4 +1,3 @@
-// server/services/authService.js
 const supabase = require('../config/supabaseClient');
 
 async function signup({ role, name, email, password, gender, stream }) {
@@ -22,12 +21,19 @@ async function signup({ role, name, email, password, gender, stream }) {
         return { message: "Signup successful. Please check your email to confirm your account." };
     }
 
-    // Select table based on role
+    // Determine table and data to insert based on role
     const table = role === 'student' ? 'students' : 'teachers';
     let dataToInsert = { auth_id: user.id, name, email };
+
     if (role === 'student') {
         dataToInsert.gender = gender;
         dataToInsert.stream = stream; // include the stream field
+    } else {
+        // For teachers, include gender and set other new fields to empty string or null
+        dataToInsert.gender = gender;
+        dataToInsert.subjects = '';
+        dataToInsert.bio = '';
+        dataToInsert.photo = '';
     }
 
     const { error: insertError } = await supabase.from(table).insert(dataToInsert);
@@ -37,8 +43,6 @@ async function signup({ role, name, email, password, gender, stream }) {
 
     return { message: "Signup successful", user };
 }
-
-module.exports = { signup };
 
 async function login({ email, password }) {
     // signInWithPassword returns { data: { user, session }, error }
@@ -102,9 +106,10 @@ async function login({ email, password }) {
 
     throw new Error('User role not found');
 }
+
 async function forgotPassword(email) {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "https://nibm-research-frontend.onrender.com/reset-password", // Ensure this is in Supabase Auth settings
+        redirectTo: "http://localhost:3000/reset-password", // Ensure this is in Supabase Auth settings
     });
 
     if (error) {
@@ -114,4 +119,5 @@ async function forgotPassword(email) {
 
     return { message: "Password reset link sent to email." };
 }
+
 module.exports = { signup, login, forgotPassword };

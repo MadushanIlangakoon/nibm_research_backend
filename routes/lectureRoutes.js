@@ -8,6 +8,7 @@ router.get('/ongoing', lectureController.getOngoingLectures);
 router.get('/upcoming', lectureController.getUpcomingLectures);
 router.post('/update', lectureController.updateLectureStart);
 router.post('/end', lectureController.endLecture);
+router.get('/past', lectureController.getPastLectures);
 router.get('/:id', lectureController.getLectureById);
 
 module.exports = router;

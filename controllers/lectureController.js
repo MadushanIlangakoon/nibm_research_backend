@@ -86,6 +86,19 @@ const endLecture = async (req, res) => {
     }
 };
 
+const getPastLectures = async (req, res) => {
+    try {
+        const { course_id } = req.query;
+        if (!course_id) {
+            return res.status(400).json({ error: "Query parameter 'course_id' is required" });
+        }
+        const lectures = await lectureService.getPastLectures(course_id);
+        res.json(lectures);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
 
 
-module.exports = { createLecture, getOngoingLectures, getUpcomingLectures, updateLectureStart, getLectureById, endLecture };
+
+module.exports = { createLecture, getOngoingLectures, getUpcomingLectures, updateLectureStart, getLectureById, endLecture, getPastLectures };
