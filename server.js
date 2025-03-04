@@ -14,6 +14,8 @@ const generalQuestionsRoutes = require('./routes/generalQuestionsRoutes');
 const testQuestionsRoutes = require('./routes/testQuestionsRoutes');
 const generalAnswersRoutes = require('./routes/generalAnswersRoutes');
 const testAnswersRoutes = require('./routes/testAnswersRoutes');
+const teacherRoutes = require('./routes/teacherRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 const app = express();
 app.use(cors({
@@ -31,6 +33,8 @@ app.use('/api/general_questions', generalQuestionsRoutes);
 app.use('/api/test_questions', testQuestionsRoutes);
 app.use('/api/general_answers', generalAnswersRoutes);
 app.use('/api/test_answers', testAnswersRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/students', studentRoutes);
 
 const server = http.createServer(app);
 const io = socketIO(server, {
