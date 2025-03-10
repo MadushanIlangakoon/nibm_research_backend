@@ -109,7 +109,7 @@ async function login({ email, password }) {
 
 async function forgotPassword(email) {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "https://nibm-research-frontend.onrender.com/reset-password", // Ensure this is in Supabase Auth settings
+        redirectTo: "http://localhost:3000/reset-password", // Ensure this is in Supabase Auth settings
     });
 
     if (error) {

@@ -14,6 +14,7 @@ async function createLecture({ course_id, teacher_id, title, description, schedu
         description,
         scheduled_at,
         video_call_url,
+        participants: [],
     };
 
     console.log("Creating lecture with payload:", payload);
@@ -31,6 +32,8 @@ async function createLecture({ course_id, teacher_id, title, description, schedu
     }
     return data[0];
 }
+
+
 
 async function updateLectureStart({ lecture_id, started_at }) {
     const { data, error } = await supabase
@@ -117,6 +120,46 @@ async function getPastLectures(course_id) {
     return data;
 }
 
+async function addParticipant({ lecture_id, student_id }) {
+    // First, fetch the current lecture details:
+    const lecture = await getLectureById(lecture_id);
+    let participants = lecture.participants || [];
+
+    // Avoid duplicate entries
+    if (!participants.includes(student_id)) {
+        participants.push(student_id);
+    }
+
+    // Update the lecture record
+    const { data, error } = await supabase
+        .from('lectures')
+        .update({ participants })
+        .eq('id', lecture_id);
+
+    if (error) {
+        console.error("Supabase error in addParticipant:", error);
+        throw new Error(error.message);
+    }
+
+    return data[0];
+}
+
+async function getLectureParticipants(lecture_id) {
+    const lecture = await getLectureById(lecture_id);
+    return lecture.participants || [];
+}
+
+async function updateAverageGaze({ lecture_id, average_gaze_duration }) {
+    const { data, error } = await supabase
+        .from('lectures')
+        .update({ average_gaze_duration }, { returning: 'representation' })
+        .eq('id', lecture_id);
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data[0];
+}
+
 module.exports = {
     createLecture,
     getOngoingLectures,
@@ -125,4 +168,7 @@ module.exports = {
     getLectureById,
     endLecture,
     getPastLectures,
+    addParticipant,
+    getLectureParticipants,
+    updateAverageGaze,  // <-- new function
 };
