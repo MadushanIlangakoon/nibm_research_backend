@@ -44,7 +44,33 @@ const getUpcomingLectures = async (req, res) => {
     }
 };
 
-// NEW: Update lecture start endpoint
+// NEW: Add participant to a lecture
+const addParticipant = async (req, res) => {
+    try {
+        const lecture_id = req.params.id;
+        const { student_id } = req.body;
+        if (!student_id) {
+            return res.status(400).json({ error: "student_id is required" });
+        }
+        const lecture = await lectureService.addParticipant({ lecture_id, student_id });
+        res.status(200).json(lecture);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+// NEW: Retrieve lecture participants
+const getLectureParticipants = async (req, res) => {
+    try {
+        const lecture_id = req.params.id;
+        const participants = await lectureService.getLectureParticipants(lecture_id);
+        res.status(200).json(participants);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+// Update lecture start endpoint
 const updateLectureStart = async (req, res) => {
     try {
         const { lecture_id, started_at } = req.body;
@@ -99,6 +125,28 @@ const getPastLectures = async (req, res) => {
     }
 };
 
+const updateAverageGaze = async (req, res) => {
+    try {
+        const { lecture_id, average_gaze_duration } = req.body;
+        if (!lecture_id || average_gaze_duration === undefined) {
+            return res.status(400).json({ error: "lecture_id and average_gaze_duration are required" });
+        }
+        const lecture = await lectureService.updateAverageGaze({ lecture_id, average_gaze_duration });
+        res.json(lecture);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
 
-
-module.exports = { createLecture, getOngoingLectures, getUpcomingLectures, updateLectureStart, getLectureById, endLecture, getPastLectures };
+module.exports = {
+    createLecture,
+    getOngoingLectures,
+    getUpcomingLectures,
+    addParticipant,
+    getLectureParticipants,
+    updateLectureStart,
+    getLectureById,
+    endLecture,
+    getPastLectures,
+    updateAverageGaze, // <-- export the new function
+};
